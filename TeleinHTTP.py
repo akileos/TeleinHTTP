@@ -20,11 +20,18 @@ class HTTPHandler(SimpleHTTPRequestHandler):
         #Filter by know keys
         #TODO: Add all existing 
         if etiquette in ["IINST","PAPP","MOTDETAT","OPTARIF","ADCO","HCHC","HCHP","IMAX","ISOUSC","HHPHC"]:
-            value = 0
-            for serEtiquette, serValue in self.ti.read().items():
-                if (serEtiquette == etiquette):
-                        value = serValue
-                        break
+            value = -1
+            for retry in [0,1]:
+                # dont retry if value exists
+                if value != -1:
+                    break
+                if retry == 1:
+                    print "Retrying !"
+                for serEtiquette, serValue in self.ti.read().items():
+                    if (serEtiquette == etiquette):
+                            value = serValue
+                            break
+            
             self.send_response(200)
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
