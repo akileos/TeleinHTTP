@@ -16,6 +16,9 @@ class Teleinfo:
                 return chr(sum)
                 
         def read (self):
+                # clear serial buffer to provide current meter data
+                self.ser.flushInput()
+
                 # Wait for data
                 while self.ser.read(1) != chr(2): pass
                 
